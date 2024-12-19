@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T9 Text to Secret Message Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>T9 Text to Secret Message Converter</h1>
+    <label for="t9Input">Encoded Message (T9 Input):</label>
+    <textarea id="t9Input" placeholder="Enter T9 encoded text (e.g., 420430)"></textarea>
+    <button onclick="convertT9()">Convert</button>
+
+    <div class="output">
+        <p><strong>Encoded Text:</strong> <span id="encodedText"></span></p>
+        <p><strong>Decoded Message:</strong> <span id="decodedMessage"></span></p>
+    </div>
+
+    <script>
+        function convertT9() {
+            const t9Mapping = {
+                "2": "a", "22": "b", "222": "c",
+                "3": "d", "33": "e", "333": "f",
+                "4": "g", "44": "h", "444": "i",
+                "5": "j", "55": "k", "555": "l",
+                "6": "m", "66": "n", "666": "o",
+                "7": "p", "77": "q", "777": "r", "7777": "s",
+                "8": "t", "88": "u", "888": "v",
+                "9": "w", "99": "x", "999": "y", "9999": "z",
+                "0": " "
+            };
+
+            const input = document.getElementById("t9Input").value;
+            const segments = input.match(/(\d)\1*|0/g); // Match repeated numbers or single 0
+            let decodedMessage = "";
+
+            if (segments) {
+                segments.forEach(segment => {
+                    if (t9Mapping[segment]) {
+                        decodedMessage += t9Mapping[segment];
+                    }
+                });
+            }
+
+            document.getElementById("encodedText").innerText = input || "No input provided";
+            document.getElementById("decodedMessage").innerText = decodedMessage || "No decoded message";
+        }
+    </script>
+</body>
+</html>
