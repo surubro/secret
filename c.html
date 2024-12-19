@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T9 Text c Encoder and Decoder</title>
+    <title>T9 Text Encoder and Decoder</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,34 +66,33 @@
                 " ": "0"
             };
 
-            const input = document.getElementById("textInput").value.toLowerCase();
+            const input = document.getElementById("textInput").value.trim().toLowerCase();
 
             let encodedMessage = "";
             let decodedMessage = "";
 
+            // Handle plain text input (letters)
             if (/^[a-z\s]+$/.test(input)) {
-                // Input is plain text, encode it
                 for (const char of input) {
                     if (charToT9Mapping[char]) {
                         encodedMessage += charToT9Mapping[char] + "0"; // Add 0 as a separator
                     }
                 }
                 encodedMessage = encodedMessage.slice(0, -1); // Remove trailing 0
-                decodedMessage = input; // Plain text is already decoded
-            } else if (/^[0-9]+$/.test(input)) {
-                // Input is T9 code, decode it
-                const segments = input.split("0"); // Split by 0 as separator
-                if (segments) {
-                    segments.forEach(segment => {
-                        if (t9ToCharMapping[segment]) {
-                            decodedMessage += t9ToCharMapping[segment];
-                        }
-                    });
+                decodedMessage = input; // The plain text is already decoded
+            }
+            // Handle T9 input (numbers)
+            else if (/^[0-9]+$/.test(input)) {
+                const segments = input.split("0"); // Split by 0 as a separator
+                for (const segment of segments) {
+                    if (t9ToCharMapping[segment]) {
+                        decodedMessage += t9ToCharMapping[segment];
+                    }
                 }
-                encodedMessage = input; // T9 code is already encoded
+                encodedMessage = input; // The input is already encoded
             } else {
-                decodedMessage = "Invalid input!";
-                encodedMessage = "Invalid input!";
+                decodedMessage = "Invalid input! Please enter only plain text or valid T9 code.";
+                encodedMessage = "Invalid input! Please enter only plain text or valid T9 code.";
             }
 
             document.getElementById("encodedMessage").innerText = encodedMessage || "No encoded message";
