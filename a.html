@@ -102,6 +102,7 @@
                 encodedMessage = "Invalid input! Please enter only plain text or valid T9 code.";
             }
 
+            // Update the HTML elements to show the messages
             document.getElementById("encodedMessage").innerText = encodedMessage || "No encoded message";
             document.getElementById("decodedMessage").innerText = decodedMessage || "No decoded message";
         }
