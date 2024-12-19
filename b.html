@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T9 Text Encoder and Decoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>T9 Text Encoder and Decoder</h1>
+    <label for="textInput">Enter Message (Plain Text or T9 Encoded):</label>
+    <textarea id="textInput" placeholder="Enter a message (e.g., 'hi' or '420430')"></textarea>
+    <button onclick="convert()">Convert</button>
+
+    <div class="output">
+        <p><strong>Encoded Message (T9):</strong> <span id="encodedMessage"></span></p>
+        <p><strong>Decoded Message (Plain Text):</strong> <span id="decodedMessage"></span></p>
+    </div>
+
+    <script>
+        function convert() {
+            const t9ToCharMapping = {
+                "2": "a", "22": "b", "222": "c",
+                "3": "d", "33": "e", "333": "f",
+                "4": "g", "44": "h", "444": "i",
+                "5": "j", "55": "k", "555": "l",
+                "6": "m", "66": "n", "666": "o",
+                "7": "p", "77": "q", "777": "r", "7777": "s",
+                "8": "t", "88": "u", "888": "v",
+                "9": "w", "99": "x", "999": "y", "9999": "z",
+                "0": " "
+            };
+
+            const charToT9Mapping = {
+                "a": "2", "b": "22", "c": "222",
+                "d": "3", "e": "33", "f": "333",
+                "g": "4", "h": "44", "i": "444",
+                "j": "5", "k": "55", "l": "555",
+                "m": "6", "n": "66", "o": "666",
+                "p": "7", "q": "77", "r": "777", "s": "7777",
+                "t": "8", "u": "88", "v": "888",
+                "w": "9", "x": "99", "y": "999", "z": "9999",
+                " ": "0"
+            };
+
+            const input = document.getElementById("textInput").value.toLowerCase();
+
+            let encodedMessage = "";
+            let decodedMessage = "";
+
+            // Determine if input is plain text or T9 code
+            if (/^[a-z\s]+$/.test(input)) {
+                // Input is plain text, encode it
+                for (const char of input) {
+                    if (charToT9Mapping[char]) {
+                        encodedMessage += charToT9Mapping[char];
+                    }
+                }
+                decodedMessage = input; // The plain text is already decoded
+            } else if (/^[0-9]+$/.test(input)) {
+                // Input is T9 code, decode it
+                const segments = input.match(/(\d)\1*|0/g); // Match repeated numbers or single 0
+                if (segments) {
+                    segments.forEach(segment => {
+                        if (t9ToCharMapping[segment]) {
+                            decodedMessage += t9ToCharMapping[segment];
+                        }
+                    });
+                }
+                encodedMessage = input; // The T9 code is already encoded
+            } else {
+                decodedMessage = "Invalid input!";
+                encodedMessage = "Invalid input!";
+            }
+
+            document.getElementById("encodedMessage").innerText = encodedMessage || "No encoded message";
+            document.getElementById("decodedMessage").innerText = decodedMessage || "No decoded message";
+        }
+    </script>
+</body>
+</html>
